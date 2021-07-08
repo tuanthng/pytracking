@@ -1,30 +1,31 @@
 # PyTracking
-A general python framework for training and running visual object trackers, based on **PyTorch**.
+A general python framework for visual object tracking and video object segmentation, based on **PyTorch**.
 
-### News:
-* Check out our CVPR 2020 paper [Probabilistic Regression for Visual Tracking](https://arxiv.org/abs/2003.12565). Code coming here soon.
-* We are currently integrating support for segmentation (VOS) and multiple objects.    
-* Check out our paper [Learning What to Learn for Video Object Segmentation](https://arxiv.org/abs/2003.11540). Code will be released here.  
- 
+### LWL and KYS released!
+* Code for our **ECCV 2020 oral** paper [Learning What to Learn for Video Object Segmentation](https://arxiv.org/abs/2003.11540) is now available.  
+* Code for our **ECCV 2020** paper [Know Your Surroundings: Exploiting Scene Information for Object Tracking](https://arxiv.org/abs/2003.11014) is now available.  
+
+
 ## Highlights
 
-### DiMP and ATOM Trackers
+### LWL, KYS, PrDiMP, DiMP and ATOM Trackers
 
-Official implementation of the **DiMP** (ICCV 2019), and 
+Official implementation of the **LWL** (ECCV 2020), **KYS** (ECCV 2020), **PrDiMP** (CVPR 2020), **DiMP** (ICCV 2019), and 
 **ATOM** (CVPR 2019) trackers, including complete **training code** and trained models.
 
 ### [Tracking Libraries](pytracking)
 
 Libraries for implementing and evaluating visual trackers. It includes
 
-* All common **tracking datasets**.  
+* All common **tracking** and **video object segmentation** datasets.  
+* Scripts to **analyse** tracker performance and obtain standard performance scores.
 * General building blocks, including **deep networks**, **optimization**, **feature extraction** and utilities for **correlation filter** tracking.  
 
 ### [Training Framework: LTR](ltr)
  
 **LTR** (Learning Tracking Representations) is a general framework for training your visual tracking networks. It is equipped with
 
-* All common **training datasets** for visual tracking.  
+* All common **training datasets** for visual object tracking and segmentation.  
 * Functions for data **sampling**, **processing** etc.  
 * Network **modules** for visual tracking.
 * And much more...
@@ -33,9 +34,44 @@ Libraries for implementing and evaluating visual trackers. It includes
 ## Trackers
 The toolkit contains the implementation of the following trackers.  
 
+### LWL
+**[[Paper]](https://arxiv.org/pdf/2003.11540.pdf)  [[Raw results]](MODEL_ZOO.md#Raw-Results-1)
+  [[Models]](MODEL_ZOO.md#Models-1)  [[Training Code]](./ltr/README.md#LWL)  [[Tracker Code]](./pytracking/README.md#LWL)**
+    
+Official implementation of the **LWL** tracker. LWL is an end-to-end trainable video object segmentation architecture
+which captures the current target object information in a compact parametric
+model. It integrates a differentiable few-shot learner module, which predicts the
+target model parameters using the first frame annotation. The learner is designed
+to explicitly optimize an error between target model prediction and a ground
+truth label. LWL further learns the ground-truth labels used by the
+few-shot learner to train the target model. All modules in the architecture are trained end-to-end by maximizing segmentation accuracy on annotated VOS videos. 
+
+![LWL overview figure](pytracking/.figs/lwtl_overview.png)
+
+### KYS
+**[[Paper]](https://arxiv.org/pdf/2003.11014.pdf)  [[Raw results]](MODEL_ZOO.md#Raw-Results)
+  [[Models]](MODEL_ZOO.md#Models)  [[Training Code]](./ltr/README.md#KYS)  [[Tracker Code]](./pytracking/README.md#KYS)**
+    
+Official implementation of the **KYS** tracker. Unlike conventional frame-by-frame detection based tracking, KYS 
+propagates valuable scene information through the sequence. This information is used to
+achieve an improved scene-aware target prediction in each frame. The scene information is represented using a dense 
+set of localized state vectors. These state vectors are propagated through the sequence and combined with the appearance
+model output to localize the target. The network is learned to effectively utilize the scene information by directly maximizing tracking performance on video segments
+![KYS overview figure](pytracking/.figs/kys_overview.png)
+
+### PrDiMP
+**[[Paper]](https://arxiv.org/pdf/2003.12565)  [[Raw results]](MODEL_ZOO.md#Raw-Results)
+  [[Models]](MODEL_ZOO.md#Models)  [[Training Code]](./ltr/README.md#PrDiMP)  [[Tracker Code]](./pytracking/README.md#DiMP)**
+    
+Official implementation of the **PrDiMP** tracker. This work proposes a general 
+formulation for probabilistic regression, which is then applied to visual tracking in the DiMP framework.
+The network predicts the conditional probability density of the target state given an input image.
+The probability density is flexibly parametrized by the neural network itself.
+The regression network is trained by directly minimizing the Kullback-Leibler divergence. 
+
 ### DiMP
-**[[Paper]](https://arxiv.org/pdf/1904.07220v1.pdf)  [[Raw results]](https://drive.google.com/drive/folders/15mpUAJmzxemnOC6gmvMTCDJ-0v6hxJ7y)
-  [[Models]](https://drive.google.com/open?id=1YEJySjhFokyQ6zgQg6vFAnzEFi1Onq7G)  [[Training Code]](./ltr/README.md#DiMP)  [[Tracker Code]](./pytracking/README.md#DiMP)**
+**[[Paper]](https://arxiv.org/pdf/1904.07220)  [[Raw results]](MODEL_ZOO.md#Raw-Results)
+  [[Models]](MODEL_ZOO.md#Models)  [[Training Code]](./ltr/README.md#DiMP)  [[Tracker Code]](./pytracking/README.md#DiMP)**
     
 Official implementation of the **DiMP** tracker. DiMP is an end-to-end tracking architecture, capable
 of fully exploiting both target and background appearance
@@ -47,9 +83,9 @@ includes an initializer network that efficiently provides an initial estimate of
 ![DiMP overview figure](pytracking/.figs/dimp_overview.png)
  
 ### ATOM
-**[[Paper]](https://arxiv.org/pdf/1811.07628.pdf)  [[Raw results]](https://drive.google.com/drive/folders/1MdJtsgr34iJesAgL7Y_VelP8RvQm_IG_)
-  [[Models]](https://drive.google.com/open?id=1EsNSQr25qfXHYLqjZaVZElbGdUg-nyzd)  [[Training Code]](./ltr/README.md#ATOM)  [[Tracker Code]](./pytracking/README.md#ATOM)**  
-  
+**[[Paper]](https://arxiv.org/pdf/1811.07628)  [[Raw results]](MODEL_ZOO.md#Raw-Results)
+  [[Models]](MODEL_ZOO.md#Models)  [[Training Code]](./ltr/README.md#ATOM)  [[Tracker Code]](./pytracking/README.md#ATOM)**  
+ 
 Official implementation of the **ATOM** tracker. ATOM is based on 
 (i) a **target estimation** module that is trained offline, and (ii) **target classification** module that is 
 trained online. The target estimation module is trained to predict the intersection-over-union (IoU) overlap 
@@ -112,7 +148,15 @@ python run_webcam.py dimp dimp50
 
 #### [ltr](ltr) - for training your tracker
 
-## Main Contributors
+## Contributors
 
+### Main Contributors
 * [Martin Danelljan](https://martin-danelljan.github.io/)  
-* [Goutam Bhat](https://www.vision.ee.ethz.ch/en/members/detail/407/)
+* [Goutam Bhat](https://goutamgmb.github.io/)
+
+### Guest Contributors
+* [Felix Järemo-Lawin](https://liu.se/en/employee/felja34) [LWL]
+
+## Acknowledgments
+* Thanks for the great [PreciseRoIPooling](https://github.com/vacancy/PreciseRoIPooling) module.  
+* We use the implementation of the Lovász-Softmax loss from https://github.com/bermanmaxim/LovaszSoftmax.  

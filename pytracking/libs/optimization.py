@@ -1,7 +1,9 @@
 import torch
 import torch.autograd
+import math
 from pytracking.libs import TensorList
 from pytracking.utils.plotting import plot_graph
+from ltr.models.layers.activation import softmax_reg
 
 
 class L2Problem:
@@ -27,7 +29,6 @@ class L2Problem:
         """M2 preconditioner."""
         return x
 
-
 class MinimizationProblem:
     """General minimization problem."""
     def __call__(self, x: TensorList) -> TensorList:
@@ -43,7 +44,6 @@ class MinimizationProblem:
 
     def M2(self, x):
         return x
-
 
 
 class ConjugateGradientBase:
@@ -225,7 +225,7 @@ class ConjugateGradient(ConjugateGradientBase):
 
 
     def run(self, num_cg_iter):
-        """Run the oprimizer with the provided number of iterations."""
+        """Run the optimizer with the provided number of iterations."""
 
         if num_cg_iter == 0:
             return
